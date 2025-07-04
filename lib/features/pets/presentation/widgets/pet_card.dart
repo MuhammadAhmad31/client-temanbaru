@@ -2,11 +2,16 @@ import 'package:client/features/pets/data/models/pets_model.dart';
 import 'package:client/features/pets/presentation/widgets/pet_detail.dart';
 import 'package:client/features/pets/presentation/widgets/pets_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:client/features/adopt/presentation/bloc/adopt_bloc.dart';
+import 'package:client/features/adopt/presentation/bloc/adopt_event.dart';
+import 'package:client/features/adopt/presentation/bloc/adopt_state.dart';
 
 class PetCard extends StatelessWidget {
   final PetsModel pet;
+  final VoidCallback? onAdoptTap;
 
-  const PetCard({super.key, required this.pet});
+  const PetCard({super.key, required this.pet, this.onAdoptTap});
 
   @override
   Widget build(BuildContext context) {
@@ -126,25 +131,51 @@ class PetCard extends StatelessWidget {
                       PetDetails(pet: pet),
                       const SizedBox(height: 12),
 
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF6B73FF), Color(0xFF9B59B6)],
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Text(
-                          'Tersedia',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                      BlocBuilder<AdoptBloc, AdoptState>(
+                        builder: (context, adoptState) {
+                          bool isAdopting = adoptState is AdoptCreateLoading;
+
+                          return ElevatedButton(
+                            onPressed: isAdopting
+                                ? null
+                                : () {
+                                    BlocProvider.of<AdoptBloc>(
+                                      context,
+                                    ).add(CreateAdoptEvent(idPet: pet.id));
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: isAdopting
+                                  ? Colors.grey
+                                  : const Color(0xFF6B73FF),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: isAdopting
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                : const Text(
+                                    'Adopsi Sekarang',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                          );
+                        },
                       ),
                     ],
                   ),

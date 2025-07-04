@@ -29,3 +29,23 @@ class AdoptError extends AdoptState {
   @override
   List<Object?> get props => [message];
 }
+
+class AdoptCreateLoading extends AdoptState {}
+
+class AdoptCreateSuccess extends AdoptState {
+  final int petId;
+
+  const AdoptCreateSuccess({required this.petId});
+
+  @override
+  List<Object?> get props => [petId];
+}
+
+class AdoptCreateError extends AdoptState {
+  final String message;
+
+  const AdoptCreateError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

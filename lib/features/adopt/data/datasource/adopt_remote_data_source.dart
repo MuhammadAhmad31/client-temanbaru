@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 abstract class AdoptRemoteDataSource {
   Future<List<AdoptModel>> getAdoptRequests(String token);
-  Future<void> createAdoptRequest(AdoptModel adoptModel, String token);
+  Future<void> createAdoptRequest(int idPet, String token);
 }
 
 class AdoptRemoteDataSourceImpl implements AdoptRemoteDataSource {
@@ -40,19 +40,18 @@ class AdoptRemoteDataSourceImpl implements AdoptRemoteDataSource {
   }
 
   @override
-  Future<void> createAdoptRequest(AdoptModel adoptModel, String token) async {
+  Future<void> createAdoptRequest(int idPet, String token) async {
     try {
       final response = await client.post(
-        Uri.parse('$baseUrl/adoption'),
+        Uri.parse('$baseUrl/adoption/$idPet/adopt'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: jsonEncode(adoptModel.toJson()),
       );
 
       if (response.statusCode == 201) {
-        // Successfully created
+        return;
       } else if (response.statusCode == 401) {
         throw ServerException(message: 'Unauthorized');
       } else {

@@ -13,3 +13,12 @@ class GetAdoptEvent extends AdoptEvent {
   @override
   List<Object?> get props => [];
 }
+
+class CreateAdoptEvent extends AdoptEvent {
+  final int idPet;
+
+  const CreateAdoptEvent({required this.idPet});
+
+  @override
+  List<Object?> get props => [idPet];
+}

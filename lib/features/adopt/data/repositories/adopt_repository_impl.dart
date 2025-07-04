@@ -31,4 +31,25 @@ class AdoptRepositoryImpl implements AdoptRepository {
       return Left(ServerFailure(message: 'Unknown error: $e'));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> createAdoptRequest(int idPet) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('CACHED_AUTH_TOKEN');
+
+      if (token == null) {
+        return Left(CacheFailure());
+      }
+
+      await remoteDataSource.createAdoptRequest(idPet, token);
+      return Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on CacheException {
+      return Left(CacheFailure());
+    } catch (e) {
+      return Left(ServerFailure(message: 'Unknown error: $e'));
+    }
+  }
 }
