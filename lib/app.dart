@@ -56,7 +56,6 @@ class MyApp extends StatelessWidget {
         ),
         home: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
-            print('Auth state: $state');
             if (state is AuthInitial || state is AuthLoading) {
               return const Scaffold(
                 body: Center(child: CircularProgressIndicator()),
