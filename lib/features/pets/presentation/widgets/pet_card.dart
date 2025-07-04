@@ -51,48 +51,6 @@ class PetCard extends StatelessWidget {
           highlightColor: const Color(
             0xFF9B59B6,
           ).withAlpha((0.05 * 255).round()),
-          onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withAlpha((0.2 * 255).round()),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Icon(
-                          Icons.pets,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          'Dipilih: ${pet.name} 🐾',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                backgroundColor: const Color(0xFF6B73FF),
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                margin: const EdgeInsets.all(16),
-                duration: const Duration(seconds: 2),
-              ),
-            );
-          },
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -178,23 +136,6 @@ class PetCard extends StatelessWidget {
                         },
                       ),
                     ],
-                  ),
-                ),
-
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: const Color(
-                      0xFF6B73FF,
-                    ).withAlpha((0.1 * 255).round()),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 16,
-                    color: const Color(
-                      0xFF6B73FF,
-                    ).withAlpha((0.7 * 255).round()),
                   ),
                 ),
               ],

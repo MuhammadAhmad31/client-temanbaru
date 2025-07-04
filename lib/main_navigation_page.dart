@@ -50,9 +50,11 @@ class _MainNavigationPageState extends State<MainNavigationPage>
             colors: [Color(0xFFF8FBFF), Color(0xFFEDF4FF)],
           ),
         ),
-        child: IndexedStack(
-          index: _currentIndex,
-          children: const [PetsPage(), AdoptPage()],
+        child: SafeArea(
+          child: IndexedStack(
+            index: _currentIndex,
+            children: const [PetsPage(), AdoptPage()],
+          ),
         ),
       ),
       bottomNavigationBar: _buildBottomNavigationBar(),

@@ -14,38 +14,59 @@ class PetsPage extends StatefulWidget {
 
 class _PetsPageState extends State<PetsPage> {
   String? _selectedAnimalType;
-
   final List<String> _animalTypes = ['Dog', 'Cat', 'Rabbit', 'Bird'];
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<PetsBloc>().add((GetPetsEvent(_selectedAnimalType ?? '')));
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          AnimalTypeDropdown(
-            selectedAnimalType: _selectedAnimalType,
-            animalTypes: _animalTypes,
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedAnimalType = newValue;
-              });
-            },
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              AnimalTypeDropdown(
+                selectedAnimalType: _selectedAnimalType,
+                animalTypes: _animalTypes,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedAnimalType = newValue;
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              GetPetsButton(
+                selectedAnimalType: _selectedAnimalType,
+                onPressed: _selectedAnimalType != null
+                    ? () {
+                        try {
+                          context.read<PetsBloc>().add(
+                            GetPetsEvent(_selectedAnimalType!),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text('Error: $e')));
+                        }
+                      }
+                    : null,
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: PetsList(selectedAnimalType: _selectedAnimalType),
+              ),
+            ],
           ),
-          const SizedBox(height: 20),
-          GetPetsButton(
-            selectedAnimalType: _selectedAnimalType,
-            onPressed: _selectedAnimalType != null
-                ? () {
-                    BlocProvider.of<PetsBloc>(
-                      context,
-                    ).add(GetPetsEvent(_selectedAnimalType!));
-                  }
-                : null,
-          ),
-          const SizedBox(height: 20),
-          Expanded(child: PetsList(selectedAnimalType: _selectedAnimalType)),
-        ],
+        ),
       ),
     );
   }
